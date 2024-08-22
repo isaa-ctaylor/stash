@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stash</title>
+
+    <link rel="stylesheet" href="{{ url_for('styles', path='index.min.css') }}">
+</head>
+<body>
+    <form id="content-upload">
+        <textarea id="content" name="content" placeholder="Start typing..."></textarea>
+        <input type="password" name="password" id="password">
+        <input id="submit" type="submit" value="Upload">
+    </form>
+    <script src="{{ url_for('scripts', path='index.min.js') }}"></script>
+</body>
+</html>
