@@ -41,6 +41,10 @@ def get_ids(db: Session, skip: int = 0, limit: int = 100) -> list[str]:
     return db.query(models.Stash.id).offset(skip).limit(limit).all()
 
 
+def get_stash_by_id(db: Session, stash_id: str) -> models.Stash:
+    return db.query(models.Stash).filter(models.Stash.id == stash_id).first()
+
+
 def generate_random_string(length: int) -> str:
     letters = string.ascii_letters
     return "".join(random.choice(letters) for _ in range(length))
