@@ -1,5 +1,7 @@
 {
   "devDependencies": {
     "tailwindcss": "^3.4.10"
-  }
+  },
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/css/index.css -o ./static/dist/css/index.min.css -mw"}
 }
