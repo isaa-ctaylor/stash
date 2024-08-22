@@ -1,5 +1,8 @@
+import pathlib
+
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -8,6 +11,21 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+wd = pathlib.Path(__file__).parent.resolve()
+
+templates = Jinja2Templates(directory=wd / "templates")
+
+app.mount(
+    "/scripts",
+    staticfiles.StaticFiles(directory=wd / "static/dist/js/"),
+    name="scripts",
+)
+app.mount(
+    "/styles",
+    staticfiles.StaticFiles(directory=wd / "static/dist/css/"),
+    name="styles",
+)
 
 
 def get_db():
@@ -19,11 +37,11 @@ def get_db():
 
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -31,7 +49,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.get("/users/", response_model=list[schemas.User])
+@app.get("/users", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
@@ -45,12 +63,11 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/{user_id}/stashes/", response_model=schemas.Stash)
-def create_item_for_user(
-    user_id: int, stash: schemas.StashCreate, db: Session = Depends(get_db)
-):
-    return crud.create_stash(db=db, stash=stash, user_id=user_id)
+@app.post("/upload", response_model=schemas.Stash)
+def create_item_for_user(stash: schemas.StashCreate, db: Session = Depends(get_db)):
+    return crud.create_stash(db=db, stash=stash)
 
 
 if __name__ == "__main__":
+    app.debug = True
     uvicorn.run(app, host="localhost", port=8080)

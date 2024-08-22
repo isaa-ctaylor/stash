@@ -22,7 +22,6 @@ class Stash(Base):
     id = Column(String, primary_key=True, index=True)
     content = Column(String)
     protected = Column(Boolean, default=False)
-    salt = Column(String)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="stashes")
