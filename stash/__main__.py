@@ -2,6 +2,7 @@ import pathlib
 
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -43,7 +44,7 @@ async def root(request: Request):
 
 @app.get("/favicon.ico")
 def favicon():
-    raise HTTPException(status_code=404)
+    return FileResponse(wd / "static/assets/favicon.ico")
 
 
 @app.exception_handler(404)
