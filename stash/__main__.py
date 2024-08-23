@@ -41,9 +41,25 @@ async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/favicon.ico")
+def favicon():
+    raise HTTPException(status_code=404)
+
+
+@app.exception_handler(404)
+def not_found(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        "404.html", {"request": request, "detail": exc.detail}
+    )
+
+
 @app.get("/{stash_id}")
 async def get_stash(stash_id: str, request: Request, db: Session = Depends(get_db)):
     stash = crud.get_stash_by_id(db, stash_id=stash_id)
+
+    if not stash:
+        raise HTTPException(status_code=404, detail="Page not found")
+
     return templates.TemplateResponse(
         "stash.html",
         {"request": request, "stash_id": stash_id, "content": stash.content},
