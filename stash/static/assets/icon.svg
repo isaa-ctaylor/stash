@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="drawing1.png"
+   inkscape:export-xdpi="100.9057"
+   inkscape:export-ydpi="100.9057"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0847363"
+     inkscape:cx="446.65233"
+     inkscape:cy="549.90323"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:export-bgcolor="#00000000" />
+  <defs
+     id="defs1">
+    <rect
+       x="413.28541"
+       y="508.45839"
+       width="208.59832"
+       height="200.77588"
+       id="rect2" />
+    <rect
+       x="413.28541"
+       y="508.45839"
+       width="208.59832"
+       height="200.77588"
+       id="rect1" />
+    <rect
+       x="413.28541"
+       y="508.45839"
+       width="208.59832"
+       height="200.77588"
+       id="rect4" />
+    <rect
+       x="413.28541"
+       y="508.45839"
+       width="208.59832"
+       height="200.77588"
+       id="rect5" />
+    <rect
+       x="413.28541"
+       y="508.45839"
+       width="208.59832"
+       height="200.77588"
+       id="rect6" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="fill:#030712;stroke-width:0.264583"
+       id="path8"
+       cx="117.07914"
+       cy="130.73833"
+       rx="62.930035"
+       ry="62.930042" />
+    <text
+       xml:space="preserve"
+       transform="matrix(6.2645105,0,0,5.3008649,-2496.983,-2597.9295)"
+       id="text2"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:Anurati;-inkscape-font-specification:'Anurati, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2);fill:#6b7280;fill-opacity:1;fill-rule:nonzero"><tspan
+         x="413.28516"
+         y="519.55898"
+         id="tspan1">S</tspan></text>
+  </g>
+</svg>
