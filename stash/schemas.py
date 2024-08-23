@@ -6,16 +6,15 @@ class StashBase(BaseModel):
 
 
 class StashCreate(StashBase):
+    owner_id: int
     content: str
     protected: bool = False
-    salt: str
 
 
 class Stash(StashBase):
     id: str
     content: str
     protected: bool = False
-    salt: str
     owner_id: int
 
     class Config:

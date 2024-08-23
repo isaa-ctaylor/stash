@@ -41,16 +41,20 @@ def get_ids(db: Session, skip: int = 0, limit: int = 100) -> list[str]:
     return db.query(models.Stash.id).offset(skip).limit(limit).all()
 
 
+def get_stash_by_id(db: Session, stash_id: str) -> models.Stash:
+    return db.query(models.Stash).filter(models.Stash.id == stash_id).first()
+
+
 def generate_random_string(length: int) -> str:
     letters = string.ascii_letters
     return "".join(random.choice(letters) for _ in range(length))
 
 
-def create_stash(db: Session, stash: schemas.StashCreate, user_id: str) -> models.Stash:
+def create_stash(db: Session, stash: schemas.StashCreate) -> models.Stash:
     current_ids = get_ids(db)
     while (id := generate_random_string(length=6)) in current_ids:
         pass
-    db_stash = models.Stash(id=id, **stash.model_dump(), owner_id=user_id)
+    db_stash = models.Stash(id=id, **stash.model_dump())
     db.add(db_stash)
     db.commit()
     db.refresh(db_stash)
