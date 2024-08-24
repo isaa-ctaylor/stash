@@ -3,10 +3,6 @@
     "tailwindcss": "^3.4.10"
   },
   "scripts": {
-    "dev": "cd stash && npx tailwindcss -i ./src/css/index.css -o ./static/dist/css/index.min.css -mw",
-    "start": "poetry run python -m stash"
-  },
-  "dependencies": {
-    "minify": "^11.4.0"
+    "build": "npx tailwindcss -i ./stash/src/css/stash.css -o ./stash/static/dist/css/stash.min.css -m"
   }
 }
