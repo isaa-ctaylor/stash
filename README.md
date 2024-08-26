@@ -3,18 +3,18 @@ A minimal, open source pastebin.
 
 ## Deployment
 
-## Building and Starting the Server with Docker Compose
+### Building and Starting the Server with Docker Compose
 
 To build and start the server using Docker Compose, follow these steps:
 
-### Prerequisites
+#### Prerequisites
 
 Make sure you have the following installed on your machine:
 
 - [Docker](https://docs.docker.com/get-docker/) (including Docker Engine and Docker CLI)
 - [Docker Compose](https://docs.docker.com/compose/install/) (Docker Compose V2 is recommended)
 
-### Steps
+#### Steps
 
 1. **Clone the Repository**
 
