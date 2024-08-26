@@ -1,6 +1,5 @@
 import pathlib
 
-import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
@@ -71,10 +70,6 @@ async def get_stash(stash_id: str, request: Request, db: Session = Depends(get_d
 def create_item_for_user(stash: schemas.StashCreate, db: Session = Depends(get_db)):
     return crud.create_stash(db=db, stash=stash)
 
-
-if __name__ == "__main__":
-    app.debug = True
-    uvicorn.run(app, host="localhost", port=8080)
 
 # @app.post("/users", response_model=schemas.User)
 # def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
