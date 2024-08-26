@@ -22,7 +22,7 @@ Make sure you have the following installed on your machine:
 
    ```bash
    git clone https://github.com/isaa-ctaylor/stash.git
-   cd your-repo
+   cd stash
    ```
 2. **Navigate to the Root Directory**
 
