@@ -1,7 +1,14 @@
+import base64
 import pathlib
+import traceback
 
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
 from fastapi.responses import FileResponse
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -11,6 +18,8 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 wd = pathlib.Path(__file__).parent.resolve()
 
@@ -53,16 +62,91 @@ def not_found(request: Request, exc: HTTPException):
     )
 
 
-@app.get("/{stash_id}")
-async def get_stash(stash_id: str, request: Request, db: Session = Depends(get_db)):
+def get_key_from_password(password, salt):
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,  # 256 bits
+        salt=salt,
+        iterations=100000,
+        backend=default_backend(),
+    )
+    return kdf.derive(password.encode())
+
+
+def decrypt_string(encrypted_data, password):
+    # Decode the base64 encoded string to get the combined buffer
+    combined_buffer = base64.b64decode(encrypted_data)
+
+    # Extract salt, iv, and ciphertext from the combined buffer
+    salt = combined_buffer[:16]
+    iv = combined_buffer[16:28]
+    cipher_text_with_tag = combined_buffer[28:]
+
+    # Extract the actual cipher text and tag
+    cipher_text = cipher_text_with_tag[:-16]
+    tag = cipher_text_with_tag[-16:]
+
+    # Derive the key using the password and salt
+    key = get_key_from_password(password, salt)
+
+    # Decrypt the cipher text
+    cipher = Cipher(algorithms.AES(key), modes.GCM(iv, tag), backend=default_backend())
+    decryptor = cipher.decryptor()
+    decrypted_text = decryptor.update(cipher_text) + decryptor.finalize()
+
+    return decrypted_text.decode()
+
+
+def get_stash_id_from_request(request: Request):
+    stash_id = request.url.path.rstrip("/").rsplit("/", 1)[-1]
+    return stash_id
+
+
+def resolve_stash(
+    request: Request,
+    db: Session = Depends(get_db),
+    token: str | None = Depends(oauth2_scheme),
+    stash_id: str = Depends(get_stash_id_from_request),
+):
     stash = crud.get_stash_by_id(db, stash_id=stash_id)
 
+    if stash:
+        if stash.protected:
+            if token:
+                try:
+                    stash.content = decrypt_string(stash.content, token)
+                except Exception as e:
+                    traceback.print_exc()
+                    raise HTTPException(status_code=401, detail="Invalid token")
+            else:
+                raise HTTPException(status_code=401, detail="Invalid token")
+
+        return stash
+
+    raise HTTPException(status_code=404, detail="Page not found")
+
+
+@app.get("/{stash_id}")
+async def get_stash(
+    stash_id: str,
+    request: Request,
+    stash: schemas.Stash | None = Depends(resolve_stash),
+    raw: bool | None = None,
+):
     if not stash:
         raise HTTPException(status_code=404, detail="Page not found")
 
+    if raw:
+        return stash.content
+
     return templates.TemplateResponse(
         "stash.html",
-        {"request": request, "stash_id": stash_id, "content": stash.content},
+        {
+            "request": request,
+            "stash_id": stash_id,
+            "content": stash.content,
+            "protected": stash.protected,
+        },
     )
 
 
