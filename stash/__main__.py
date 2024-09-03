@@ -2,6 +2,8 @@ import base64
 import pathlib
 import traceback
 
+import cryptography
+import cryptography.exceptions
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -58,7 +60,7 @@ def favicon():
 @app.exception_handler(404)
 def not_found(request: Request, exc: HTTPException):
     return templates.TemplateResponse(
-        "404.html", {"request": request, "detail": exc.detail}
+        "404.html", {"request": request, "detail": exc.detail}, status_code=404
     )
 
 
@@ -115,8 +117,7 @@ def resolve_stash(
             if token:
                 try:
                     stash.content = decrypt_string(stash.content, token)
-                except Exception as e:
-                    traceback.print_exc()
+                except cryptography.exceptions.InvalidTag as e:
                     raise HTTPException(status_code=401, detail="Invalid token")
             else:
                 raise HTTPException(status_code=401, detail="Invalid token")
