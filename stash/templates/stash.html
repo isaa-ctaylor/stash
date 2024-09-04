@@ -12,8 +12,10 @@
         {% if not protected %}{{ content }}{% endif %}
     </div>
     {% if protected %}
-    <input type="password" name="password" id="password">
-    <input id="submit" type="submit" value="Submit">
+    <form id="stash-password-input">
+        <input type="password" name="password" id="password">
+        <input id="submit" type="submit" value="Submit">
+    </form>
     {% endif %}
     <script src="{{ url_for('scripts', path='stash.min.js') }}"></script>
 </body>
