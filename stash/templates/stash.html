@@ -9,8 +9,12 @@
 </head>
 <body>
     <div id="content">
-        {{ content }}
+        {% if not protected %}{{ content }}{% endif %}
     </div>
+    {% if protected %}
+    <input type="password" name="password" id="password">
+    <input id="submit" type="submit" value="Submit">
+    {% endif %}
     <script src="{{ url_for('scripts', path='stash.min.js') }}"></script>
 </body>
 </html>
