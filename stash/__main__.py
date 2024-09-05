@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -109,6 +109,7 @@ def resolve_stash(
     db: Session = Depends(get_db),
     token: str | None = Depends(oauth2_scheme),
     stash_id: str = Depends(get_stash_id_from_request),
+    raw: bool | None = None,
 ):
     stash = crud.get_stash_by_id(db, stash_id=stash_id)
 
@@ -120,7 +121,8 @@ def resolve_stash(
                 except cryptography.exceptions.InvalidTag as e:
                     raise HTTPException(status_code=401, detail="Invalid token")
             else:
-                raise HTTPException(status_code=401, detail="Invalid token")
+                if raw:
+                    raise HTTPException(status_code=401, detail="Invalid token")
 
         return stash
 
@@ -138,7 +140,7 @@ async def get_stash(
         raise HTTPException(status_code=404, detail="Page not found")
 
     if raw:
-        return stash.content
+        return JSONResponse({"content": stash.content})
 
     return templates.TemplateResponse(
         "stash.html",
