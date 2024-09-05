@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - stash-data:/app/data
+      - stash-data:/app/stash/data
     ports:
       - "8080:8000"
     command: ["poetry", "run", "fastapi", "run", "stash/__main__.py", "--host", "0.0.0.0", "--port", "8000"]
