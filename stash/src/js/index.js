@@ -54,7 +54,7 @@ document.getElementById("submit").onclick = async (evt) => {
     evt.preventDefault();
 
     var content = document.getElementById("content").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const password = document.getElementById("stash-password").value.trim();
 
     if (content.length === 0) {
         alert("Content cannot be empty");
@@ -87,6 +87,58 @@ document.getElementById("submit").onclick = async (evt) => {
             return response.json();
         }
     }).then((data) => {
-        console.log(data);
+        document.location.assign(data.id);
     });
+}
+
+const passwordFormContainer = document.getElementById("password-form-container");
+const stashPasswordInput = document.getElementById("stash-password");
+
+var currentStashPassword = "";
+
+document.getElementById("lock-button").onclick = () => {
+    passwordFormContainer.classList.toggle("hidden");
+
+    if (!passwordFormContainer.classList.contains("hidden")) {
+        stashPasswordInput.focus();
+        currentStashPassword = stashPasswordInput.value;
+    }
+};
+
+document.getElementById("password-form-save").onclick = () => {
+    passwordFormContainer.classList.toggle("hidden");
+}
+
+document.getElementById("password-form-close-area").onclick = () => {
+    passwordFormContainer.classList.toggle("hidden");
+};
+
+document.getElementById("password-form-cancel").onclick = () => {
+    passwordFormContainer.classList.toggle("hidden");
+    stashPasswordInput.value = currentStashPassword;
+}
+
+function generatePassword() {
+    var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var lowerCase = "abcdefghijklmnopqrstuvwxyz";
+    var numbers = "0123456789";
+    var specialCharacters = "!@#$%^&*()";
+
+    // Combine all possible characters
+    var allCharacters = upperCase + lowerCase + numbers + specialCharacters;
+
+    var passwordLength = 9;
+    var password = '';
+
+    // Generate the password
+    for (var i = 0; i < passwordLength; i++) {
+        var randomIndex = Math.floor(Math.random() * allCharacters.length);
+        password += allCharacters[randomIndex];
+    }
+
+    return password;
+}
+
+document.getElementById("generate-password").onclick = () => {
+    document.getElementById("stash-password").value = generatePassword();
 }
