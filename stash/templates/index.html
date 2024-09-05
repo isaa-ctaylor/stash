@@ -6,13 +6,52 @@
     <title>stash</title>
 
     <link rel="stylesheet" href="{{ url_for('styles', path='stash.min.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
-<body>
-    <form id="content-upload">
+<body class="bg-slate-950 font-roboto-mono h-screen select-none">
+    <div class="flex flex-col w-full h-full">
+        <div class="w-full p-10">
+            <div class="flex">
+                <div class="flex"><span id="title" class="text-2xl text-gray-500">stash</span></div>
+                <div id="header-actions" class="flex ml-auto my-auto gap-2 flex-row-reverse">
+                    <span id="submit" class="material-symbols-outlined text-gray-500 translate-y-1 cursor-pointer">send</span>
+                    <div class="h-screen w-screen absolute top-0 right-0 flex flex-row backdrop-blur-sm hidden" id="password-form-container">
+                        <div class="h-screen w-screen flex items-center justify-center">
+                            <div id="password-form-close-area" class="h-screen w-screen"></div>
+                            <div id="password-form" class="absolute bg-white bg-opacity-15 rounded-2xl backdrop-blur-[10px] border-[1px] border-solid border-opacity-30 border-white flex flex-col text-white p-10 md:py-6 md:right-14 md:top-7">
+                                <span class="text-xl">Add Password</span>
+                                <span class="text-sm pt-3">Protect this stash with a password</span>
+                                <div class="mt-5 flex flex-row gap-2">
+                                    <input type="text" name="stash-password" id="stash-password" class="p-1 pl-2 pr-8 bg-gray-100 bg-opacity-10 border-none outline-none rounded-md w-64">
+                                    <div>
+                                        <span class="material-symbols-outlined text-gray-400 cursor-pointer translate-y-1" title="Generate Password">lock_reset</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-row w-full mt-5 flex-1">
+                                    <div id="password-form-cancel" class="cursor-pointer">Cancel</div>
+                                    <div id="password-form-save" class="cursor-pointer ml-auto">Save</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="lock-button" class="material-symbols-outlined text-gray-500 translate-y-1 cursor-pointer">lock</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-1">
+            <textarea name="content" id="content" placeholder="Start typing..." class="bg-transparent border-none outline-none resize-none m-0 p-10 pt-0 flex-1 text-gray-300 placeholder-gray-500"></textarea>
+        </div>
+    </div>
+    <!-- <form id="content-upload">
         <textarea id="content" name="content" placeholder="Start typing..."></textarea>
         <input type="password" name="password" id="password">
         <input id="submit" type="submit" value="Upload">
-    </form>
+    </form> -->
     <script src="{{ url_for('scripts', path='index.min.js') }}"></script>
 </body>
 </html>

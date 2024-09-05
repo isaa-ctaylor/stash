@@ -3,20 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>stash - {{ stash_id }}</title>
+    <title>stash</title>
 
     <link rel="stylesheet" href="{{ url_for('styles', path='stash.min.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
-<body>
-    <div id="content">
-        {% if not protected %}{{ content }}{% endif %}
+<body class="bg-slate-950 font-roboto-mono h-screen select-none">
+    <div class="flex flex-col w-full h-full">
+        <div class="w-full p-10">
+            <div class="flex">
+                <div class="flex"><span id="title" class="text-2xl text-gray-500">stash</span></div>
+                <div id="header-actions" class="flex ml-auto my-auto gap-2 flex-row-reverse">
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-1">
+            <div id="content">
+                {% if not protected %}{{ content }}{% endif %}
+            </div>
+        </div>
+        {% if protected %}
+        <div id="password-form" class="absolute left-0 top-0 h-screen w-screen flex items-center justify-center select-none backdrop-blur-sm">
+            <div class="bg-white bg-opacity-15 rounded-2xl backdrop-blur-[10px] border-[1px] border-solid border-opacity-30 border-white flex flex-col p-10 text-white">
+                <span class="text-xl">Enter password</span>
+                <span class="text-sm">This stash is protected with a password</span>
+                <div class="mt-5 flex flex-row gap-2">
+                    <input type="text" name="password" id="password"
+                        class="p-1 pl-2 pr-2 bg-gray-100 bg-opacity-10 border border-transparent outline-none rounded-md w-full" autocomplete="off">
+                </div>
+                <div class="flex flex-row-reverse w-full mt-5 flex-1">
+                    <div id="submit" class="cursor-pointer">Submit</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% if protected %}
-    <form id="stash-password-input">
-        <input type="password" name="password" id="password">
-        <input id="submit" type="submit" value="Submit">
-    </form>
-    {% endif %}
     <script src="{{ url_for('scripts', path='stash.min.js') }}"></script>
 </body>
 </html>
