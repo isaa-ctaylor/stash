@@ -1,8 +1,14 @@
+import pathlib
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./data/data.db"
+wd = pathlib.Path(__file__).parent.resolve()
+
+data_path = wd / "data"
+
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{data_path / 'data.db'}"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(
