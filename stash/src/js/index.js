@@ -93,6 +93,7 @@ document.getElementById("submit").onclick = async (evt) => {
 
 const passwordFormContainer = document.getElementById("password-form-container");
 const stashPasswordInput = document.getElementById("stash-password");
+const content = document.getElementById("content");
 
 var currentStashPassword = "";
 
@@ -102,6 +103,8 @@ document.getElementById("lock-button").onclick = () => {
     if (!passwordFormContainer.classList.contains("hidden")) {
         stashPasswordInput.focus();
         currentStashPassword = stashPasswordInput.value;
+    } else {
+        content.focus();
     }
 };
 
