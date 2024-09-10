@@ -142,3 +142,5 @@ function generatePassword() {
 document.getElementById("generate-password").onclick = () => {
     document.getElementById("stash-password").value = generatePassword();
 }
+
+document.getElementById("content").focus();
