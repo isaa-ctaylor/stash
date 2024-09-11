@@ -43,7 +43,7 @@ RUN poetry install --no-root
 WORKDIR /app
 
 # Copy the Python application code
-COPY ./stash ./stash
+COPY ./stash /app
 # COPY ./LICENCE ./LICENCE
 COPY ./README.md ./README.md
 
@@ -52,7 +52,7 @@ COPY --from=frontend-builder /app/stash/static/dist/css ./static/dist/css
 
 # Copy the js to the static folder
 # TODO: Minify js
-COPY ./stash/src/js ./stash/static/dist/js
+COPY ./stash/src/js ./static/dist/js
 
 # Copy Python dependencies from the python-builder stage
 # COPY --from=poetry /app/venv /app/venv
@@ -63,4 +63,4 @@ COPY ./stash/src/js ./stash/static/dist/js
 EXPOSE 8000
 
 # Command to run the FastAPI application
-CMD ["poetry", "run", "fastapi", "run", "stash/__main__.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "fastapi", "run", "__main__.py", "--host", "0.0.0.0", "--port", "8000"]

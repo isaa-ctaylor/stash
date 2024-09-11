@@ -1,13 +1,24 @@
 services:
   server:
+    image: isaa-ctaylor/stash
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - stash-data:/app/stash/data
+      - stash-data:/app/data
     ports:
       - "8080:8000"
-    command: ["poetry", "run", "fastapi", "run", "stash/__main__.py", "--host", "0.0.0.0", "--port", "8000"]
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./stash
+          target: /app
+          ignore:
+            - ./stash/static/assets
+            - ./stash/templates
+        - action: sync
+          path: ./stash
+          target: /app
 
 volumes:
   stash-data:
