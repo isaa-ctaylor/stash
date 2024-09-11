@@ -1,6 +1,5 @@
 import base64
 import pathlib
-import traceback
 
 import cryptography
 import cryptography.exceptions
@@ -16,6 +15,8 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+
+__version__ = "0.0.1"
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -49,7 +50,9 @@ def get_db():
 
 @app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "version": __version__}
+    )
 
 
 @app.get("/favicon.ico")
