@@ -17,14 +17,15 @@
     <div class="flex flex-col w-full h-full">
         <div class="w-full p-10">
             <div class="flex">
-                <div class="flex"><span id="title" class="text-2xl text-gray-500">stash</span></div>
+                <div class="flex"><span id="title" class="text-2xl text-gray-500 cursor-pointer"><a href="/">stash</a></span></div>
                 <div id="header-actions" class="flex ml-auto my-auto gap-2 flex-row-reverse">
+                    <span id="copy-button" class="material-symbols-outlined translate-y-1 text-gray-500 cursor-pointer">content_copy</span>
                 </div>
             </div>
         </div>
         <div class="flex flex-1">
-            <div id="content">
-                {% if not protected %}{{ content }}{% endif %}
+            <div class="text-gray-300 p-10 pt-0">
+                <pre id="content" class="font-roboto-mono">{% if not protected %}{{ content }}{% endif %}</pre>
             </div>
         </div>
         {% if protected %}

@@ -29,7 +29,7 @@
                                 <div class="mt-5 flex flex-row gap-2">
                                     <input type="text" name="stash-password" id="stash-password" class="p-1 pl-2 pr-8 bg-gray-100 bg-opacity-10 border-none outline-none rounded-md w-64">
                                     <div>
-                                        <span class="material-symbols-outlined text-gray-400 cursor-pointer translate-y-1" title="Generate Password">lock_reset</span>
+                                        <span id="generate-password" class="material-symbols-outlined text-gray-400 cursor-pointer translate-y-1" title="Generate Password">lock_reset</span>
                                     </div>
                                 </div>
                                 <div class="flex flex-row w-full mt-5 flex-1">
@@ -44,7 +44,13 @@
             </div>
         </div>
         <div class="flex flex-1">
-            <textarea name="content" id="content" placeholder="Start typing..." class="bg-transparent border-none outline-none resize-none m-0 p-10 pt-0 flex-1 text-gray-300 placeholder-gray-500"></textarea>
+            <textarea name="content" id="content" placeholder="Start typing..." class="bg-transparent border-none outline-none resize-none m-0 p-10 pt-0 flex-1 text-gray-300 placeholder-gray-500" autocomplete="off"></textarea>
+        </div>
+        <div id="footer" class="w-full flex items-center py-5 px-10">
+            <span class="text-gray-500 text-xs">v{{ version }}</span>
+            <div class="flex-1 flex">
+                <span class="text-gray-500 text-xs mx-auto">Powered by <a href="https://github.com/isaa-ctaylor/stash" class="underline underline-offset-2">stash</a> - created by <a class="underline underline-offset-2" href="https://github.com/isaa-ctaylor">isaa-ctaylor</a></span>
+            </div>
         </div>
     </div>
     <!-- <form id="content-upload">
