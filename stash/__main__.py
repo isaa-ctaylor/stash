@@ -12,10 +12,15 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Request, staticfiles
+from fastapi import Depends, FastAPI, HTTPException, Request, Security, staticfiles
 from fastapi.responses import FileResponse, JSONResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import (
+    OAuth2PasswordBearer,
+    OAuth2PasswordRequestForm,
+    SecurityScopes,
+)
 from fastapi.templating import Jinja2Templates
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -29,9 +34,14 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-oauth_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
+oauth_scheme = OAuth2PasswordBearer(
+    tokenUrl="token",
+    auto_error=False,
+    scopes={
+        "me": "Read information about the current user.",
+    },
+)
 SECRET_KEY = os.getenv("SECRET_KEY")
-print(SECRET_KEY)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRES_MINUTES = 30
 CREDENTIALS_EXCEPTION = HTTPException(
@@ -148,15 +158,32 @@ def resolve_stash(
     raise HTTPException(status_code=404, detail="Page not found")
 
 
-def decode_token(token: str = Depends(oauth_scheme), db: Session = Depends(get_db)):
+def decode_token(
+    security_scopes: SecurityScopes,
+    token: str = Depends(oauth_scheme),
+    db: Session = Depends(get_db),
+):
+    if security_scopes.scopes:
+        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+    else:
+        authenticate_value = "Bearer"
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload: dict = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise credentials_exception
-        token_data = schemas.TokenData(username=username)
-    except jwt.InvalidTokenError:
+            raise CREDENTIALS_EXCEPTION
+        token_scopes = payload.get("scopes", [])
+        token_data = schemas.TokenData(username=username, scopes=token_scopes)
+    except (jwt.InvalidTokenError, ValidationError):
         raise CREDENTIALS_EXCEPTION
+
+    for scope in security_scopes.scopes:
+        if scope not in token_data.scopes:
+            raise HTTPException(
+                status_code=401,
+                detail="Not enough permissions",
+                headers={"WWW-Authenticate": authenticate_value},
+            )
 
     user = crud.get_user_by_email(db, email=token_data.username)
     return user
@@ -169,7 +196,7 @@ async def get_current_user(user: schemas.User | None = Depends(decode_token)):
 
 
 async def get_current_active_user(
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Security(get_current_user, scopes=["me"]),
 ):
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
@@ -200,7 +227,8 @@ async def login_for_access_token(
         raise CREDENTIALS_EXCEPTION
     access_token_expires = datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRES_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.email, "scopes": ["me"]},
+        expires_delta=access_token_expires,
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
 
